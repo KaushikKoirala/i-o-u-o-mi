@@ -1,20 +1,32 @@
 package com.example.iouomi;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class SignupFragment extends Fragment {
 
+    //private final String URL = "https://jsonplaceholder.typicode.com/todos/1";
+    private final String URL = "http://iouomi.centralus.cloudapp.azure.com:5000/hello";
     private CoordinatorLayout frame;
     private EditText nameEditText;
     private EditText phoneEditText;
@@ -67,8 +79,51 @@ public class SignupFragment extends Fragment {
                     confirmEditText.setText("");
                     Snackbar.make(frame, "Signing up....",
                             Snackbar.LENGTH_SHORT).show();
+                    JSONObject jsonRequest = new JSONObject();
+                    try {
+                        jsonRequest.put("phone_number", phoneStr);
+                        jsonRequest.put("password", passwordStr);
+                        jsonRequest.put("name", nameStr);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    volleyJsonObjectRequest(URL, jsonRequest);
+
                 }
             }
         });
     }
+
+    public void volleyJsonObjectRequest(String url, JSONObject jsonRequest){
+
+        String  REQUEST_TAG = "com.androidtutorialpoint.volleyJsonObjectRequest";
+        signupProgress.setVisibility(View.VISIBLE);
+
+        JsonObjectRequest jsonObjectReq = new JsonObjectRequest(Request.Method.GET, url, jsonRequest,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        signupProgress.setVisibility(View.INVISIBLE);
+                        Snackbar.make(frame, "Account created. Please login",
+                                Snackbar.LENGTH_SHORT).show();
+                        signupProgress.setVisibility(View.INVISIBLE);
+                        getActivity().onBackPressed();
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // TODO: Handle error
+                signupProgress.setVisibility(View.INVISIBLE);
+                Toast.makeText(getContext(), "there was an error", Toast.LENGTH_SHORT).show();
+                Log.d("SigninFragment", error.toString());
+            }
+        });
+
+        // Adding JsonObject request to request queue
+        AppSingleton.getInstance(getContext()).addToRequestQueue(jsonObjectReq, REQUEST_TAG);
+    }
+
+
 }

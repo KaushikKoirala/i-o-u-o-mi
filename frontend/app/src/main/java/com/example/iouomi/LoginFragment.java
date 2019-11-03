@@ -1,5 +1,6 @@
 package com.example.iouomi;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,12 +11,15 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.material.snackbar.Snackbar;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -23,8 +27,8 @@ import androidx.fragment.app.Fragment;
 
 public class LoginFragment extends Fragment {
 
-    private final String URL = "https://jsonplaceholder.typicode.com/todos/1";
-
+    //private final String URL = "https://jsonplaceholder.typicode.com/todos/1";
+    private final String URL = "http://iouomi.centralus.cloudapp.azure.com:5000/login/";
     private CoordinatorLayout frame;
     private EditText phoneEditText;
     private EditText passwordEditText;
@@ -68,7 +72,18 @@ public class LoginFragment extends Fragment {
                     passwordEditText.setText("");
                     Snackbar.make(frame, "Logging in...",
                             Snackbar.LENGTH_SHORT).show();
-                    volleyJsonObjectRequest(URL);
+                    //pass in a JSON Object consisting of
+                    //phone number and password.
+
+                    JSONObject jsonRequest = new JSONObject();
+                    try {
+                        jsonRequest.put("phone_number", user);
+                        jsonRequest.put("password", password);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    Log.d("LoginFragment", jsonRequest.toString());
+                    volleyJsonObjectRequest(URL, jsonRequest);
                 }
             }
         });
@@ -81,17 +96,19 @@ public class LoginFragment extends Fragment {
         });
     }
 
-    public void volleyJsonObjectRequest(String url){
+    public void volleyJsonObjectRequest(String url, JSONObject jsonRequest){
 
         String  REQUEST_TAG = "com.androidtutorialpoint.volleyJsonObjectRequest";
         progressBar.setVisibility(View.VISIBLE);
 
-        JsonObjectRequest jsonObjectReq = new JsonObjectRequest(Request.Method.GET, url, null,
+        JsonObjectRequest jsonObjectReq = new JsonObjectRequest(Request.Method.GET, url, jsonRequest,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         progressBar.setVisibility(View.INVISIBLE);
-                        Toast.makeText(getContext(), "response came back", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getContext(), MainActivity.class);
+                        startActivity(intent);
+                        System.out.println(response.toString());
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -103,8 +120,23 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        // Adding JsonObject request to request queue
-        AppSingleton.getInstance(getContext()).addToRequestQueue(jsonObjectReq, REQUEST_TAG);
+        jsonObjectReq.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
+        AppSingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(jsonObjectReq, REQUEST_TAG);
     }
 
 }

@@ -1122,6 +1122,7 @@ id listMode
 id list_item
 id login_button
 id login_progressBar
+id main_activity_container
 id masked
 id message
 id middle
@@ -1209,6 +1210,7 @@ id textSpacerNoTitle
 id textStart
 id textView
 id textView2
+id textView3
 id text_input_password_toggle
 id textinput_counter
 id textinput_error
@@ -1284,6 +1286,7 @@ layout abc_search_view
 layout abc_select_dialog_material
 layout abc_tooltip
 layout activity_main
+layout activity_start
 layout design_bottom_navigation_item
 layout design_bottom_sheet_dialog
 layout design_layout_snackbar
@@ -1298,6 +1301,7 @@ layout design_navigation_item_subheader
 layout design_navigation_menu
 layout design_navigation_menu_item
 layout design_text_input_password_icon
+layout fragment_dashboard
 layout fragment_login
 layout fragment_signup
 layout mtrl_layout_snackbar

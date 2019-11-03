@@ -14,7 +14,7 @@ public class StartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         getSupportActionBar().hide();
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_start);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, new LoginFragment()).commit();
     }
