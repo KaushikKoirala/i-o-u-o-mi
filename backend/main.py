@@ -18,7 +18,7 @@ def index():
 def addUser():
     content = request.get_json()
     users[content["id"]] = content
-    client.iouomi_db.person.insertOne(content)
+    client.iouomi_db.People.insertOne(content)
     return Response(
         json.dumps(content), status = 200, mimetype = "application/json"
     )
@@ -26,6 +26,7 @@ def addUser():
 @app.route("/removeUser/<userID>", methods = ["DELETE"])
 def removeUser(userID):
     users.pop(userID, None)
+    # client.iouomi_db.person.remove()
 
 @app.route("/addTransaction", methods = ["POST"])
 def addTransaction():
