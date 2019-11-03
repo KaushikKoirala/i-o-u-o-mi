@@ -50,7 +50,10 @@ def login():
 	people_col = client.iouomi_db['People']
 	query = {'Phone Number': phone_number}
 	response_doc = people_col.find(query)
-	if response_doc['Password'] == password:
+	response_dict = dict()
+	for x in response_doc:
+		response_dict = x
+	if response_dict['Password'] == password:
 		return Response(json.dumps(['successful login']), status=200, mimetype="application/json" )
 	else:
 		return Response(json.dumps(['ERROR: Unsuccessful login']), status=401, mimetype="application/json")
