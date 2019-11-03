@@ -32,7 +32,7 @@ def removeUser(userID):
 @app.route("/addTransaction", methods = ["POST"])
 def addTransaction():
     content = request.get_json()
-    transactions[content["id"]] = content
+    transactions[content["_id"]] = content
     return Response(
         json.dumps(content), status = 200, mimetype = "application/json"
     )
@@ -40,7 +40,7 @@ def addTransaction():
 @app.route("/updateTransaction", methods = ["POST"])
 def updateTransaction():
     content = request.get_json()
-    transactions[content["id"]] = content
+    transactions[content["_id"]] = content
     print(transactions)
     return Response(
         json.dumps(content), status = 200, mimetype = "application/json"
@@ -58,7 +58,7 @@ def login():
 	for x in response_doc:
 		response_dict = x
 	if response_dict['Password'] == password:
-		return Response(json.dumps(['successful login']), status=200, mimetype="application/json" )
+		return Response(json.dumps(response_dict), status=200, mimetype="application/json" )
 	else:
 		return Response(json.dumps(['ERROR: Unsuccessful login']), status=401, mimetype="application/json")
 
