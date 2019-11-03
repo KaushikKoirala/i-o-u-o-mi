@@ -1,5 +1,9 @@
 import json
 from flask import Flask, request, Response
+import pymongo
+password_cred = open("mongo_credentials.txt", 'r')
+auth_str = "mongodb+srv://i-o-u-o-mi-access:" + str(password_cred)+ "@i-o-u-o-mi-860kg.azure.mongodb.net/test?retryWrites=true&w=majority"
+client = pymongo.MongoClient(auth_str)
 app = Flask(__name__)
 
 users = {}
@@ -38,7 +42,18 @@ def updateTransaction():
         json.dumps(content), status = 200, mimetype = "application/json"
     )
 
-    
+@app.route("/login", methods = ["POST"])
+def login():
+	content = request.get_json()
+	phone_number = content['phone_number']
+	password = content['password']
+	people_col = client.iouomi_db['People']
+	query = {'Phone Number': phone_number}
+	response_doc = people_col.find(query)
+	if response_doc['Password'] == password:
+		return Response(json.dumps(['successful login']), status=200, mimetype="application/json" )
+	else:
+		return Response(json.dumps(['ERROR: Unsuccessful login']), status=401, mimetype="application/json")
 
 # def deleteTransaction():
 
