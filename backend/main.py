@@ -1,6 +1,5 @@
 import json
 from flask import Flask, request, Response
-from bson.objectid import ObjectId
 import pymongo
 import os
 password_cred = os.environ.get('MONGO_CRED')
@@ -28,7 +27,7 @@ def addUser():
 @app.route("/removeUser/<userID>", methods = ["DELETE"])
 def removeUser(userID):
     users.pop(userID, None)
-    client['iouomi_db']['People'].delete_one({"_id" : ObjectId(userID)})
+    # client['iouomi_db']['People'].delete_one({"_id" : ObjectId(userID)})
 
 @app.route("/addTransaction", methods = ["POST"])
 def addTransaction():
