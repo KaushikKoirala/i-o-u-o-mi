@@ -3,7 +3,7 @@ from flask import Flask, request, Response
 import pymongo
 import os
 password_cred = os.environ.get('MONGO_CRED')
-auth_str = "mongodb+srv://i-o-u-o-mi-access:"+password_cred+"@i-o-u-o-mi-860kg.azure.mongodb.net/test?retryWrites=true&w=majority"
+auth_str = "mongodb+srv://i-o-u-o-mi-access:"+str(password_cred) +"@i-o-u-o-mi-860kg.azure.mongodb.net/test?retryWrites=true&w=majority"
 client = pymongo.MongoClient(auth_str)
 app = Flask(__name__)
 
@@ -43,7 +43,7 @@ def updateTransaction():
         json.dumps(content), status = 200, mimetype = "application/json"
     )
 
-@app.route("/login", methods = ["POST"])
+@app.route("/login", methods = ["GET"])
 def login():
 	content = request.get_json()
 	phone_number = content['phone_number']
