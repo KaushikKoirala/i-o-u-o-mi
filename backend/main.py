@@ -1,8 +1,9 @@
 import json
 from flask import Flask, request, Response
 import pymongo
-password_cred = open("mongo_credentials.txt", 'r')
-auth_str = "mongodb+srv://i-o-u-o-mi-access:" + str(password_cred)+ "@i-o-u-o-mi-860kg.azure.mongodb.net/test?retryWrites=true&w=majority"
+import os
+password_cred = os.environ.get('MONGO_CRED')
+auth_str = "mongodb+srv://i-o-u-o-mi-access:"+password_cred+"@i-o-u-o-mi-860kg.azure.mongodb.net/test?retryWrites=true&w=majority"
 client = pymongo.MongoClient(auth_str)
 app = Flask(__name__)
 
