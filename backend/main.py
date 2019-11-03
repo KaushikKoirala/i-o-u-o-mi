@@ -18,6 +18,7 @@ def index():
 def addUser():
     content = request.get_json()
     users[content["id"]] = content
+    client.iouomi_db.person.insertOne(content)
     return Response(
         json.dumps(content), status = 200, mimetype = "application/json"
     )
