@@ -21,7 +21,7 @@ def addUser():
         json.dumps(content), status = 200, mimetype = "application/json"
     )
 
-@app.route("/removeUser", methods = ["DELETE"])
+@app.route("/removeUser/<userID>", methods = ["DELETE"])
 def removeUser(userID):
     users.pop(userID, None)
 
