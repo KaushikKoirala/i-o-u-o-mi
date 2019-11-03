@@ -17,7 +17,7 @@ def index():
 @app.route("/addUser", methods = ["POST"])
 def addUser():
     content = request.get_json()
-    users[content["id"]] = content
+    users[content["_id"]] = content
     
     client['iouomi_db']['People'].insert(content)
     return Response(
