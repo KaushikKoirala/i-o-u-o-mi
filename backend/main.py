@@ -27,7 +27,7 @@ def addUser():
 @app.route("/removeUser/<userID>", methods = ["DELETE"])
 def removeUser(userID):
     users.pop(userID, None)
-    # client.iouomi_db.person.remove()
+    client['iouomi_db']['People'].delete_one({"_id" : ObjectId(userID)})
 
 @app.route("/addTransaction", methods = ["POST"])
 def addTransaction():
