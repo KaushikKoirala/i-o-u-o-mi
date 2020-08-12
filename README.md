@@ -1,1 +1,1 @@
-# Hackathon Project for an interactive money sharing app
+Hackathon Project for an interactive money sharing app
